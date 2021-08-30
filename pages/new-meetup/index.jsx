@@ -1,8 +1,10 @@
 import NewMeetupForm from './../../components/meetups/NewMeetupForm';
-
+import axios from 'axios';
 const NewMeetup = () => {
-  function addMeetupHandler(enteredMeetupData) {
+  async function addMeetupHandler(enteredMeetupData) {
     console.log(enteredMeetupData);
+    const result = await axios.post('/api/new-meetup', enteredMeetupData);
+    console.log('result', result.data);
   }
   return (
     <>
