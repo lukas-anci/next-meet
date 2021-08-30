@@ -11,9 +11,7 @@ async function handler(req, res) {
     const data = req.body;
     console.log('got data in api/new-meetup', data);
 
-    const client = await MongoClient.connect(
-      'mongodb+srv://lukasAdmin:lukoilas@frankfurtclusteraws.xj0nq.mongodb.net/meetupDb?retryWrites=true&w=majority'
-    );
+    const client = await MongoClient.connect('your connection');
     client.close();
     res.status(200).json({ msg: 'success', data });
   }
