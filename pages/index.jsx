@@ -1,5 +1,4 @@
 import MeetupList from './../components/meetups/MeetupList';
-import { useState, useEffect } from 'react';
 
 const DUMMY_MEETUPS = [
   {
@@ -17,15 +16,11 @@ const DUMMY_MEETUPS = [
     description: 'This is our first meet in UK',
   },
 ];
-const HomePage = () => {
-  const [meetupsArr, setMeetupsArr] = useState([]);
-  useEffect(() => {
-    setMeetupsArr(DUMMY_MEETUPS);
-  }, []);
+const HomePage = (props) => {
   return (
     <>
       <h1>Home meetup page</h1>
-      <MeetupList meetups={meetupsArr} />
+      <MeetupList meetups={props.meetups} />
     </>
   );
 };
@@ -34,5 +29,16 @@ const HomePage = () => {
 
 // SSR server side rendering - duomenys sugeneruojami uzklausos metu, tinka labiau kai duomenys kitna kas sekunde ar greiciau
 // SSG static site generating - duomenys sugeneruojami aplikacijos sukurimo metu ir atnaujinami jei reikia tam tikru intervalu
+
+export function getStaticProps() {
+  // sitas kodas niekada neatsiudrs pas klienta, cia galima sakyt yra back endas
+  // fetch, validacija, ir pan
+  return {
+    props: {
+      meetups: DUMMY_MEETUPS,
+    },
+    revalidate: 10, // kas 10 sek duomenys bus atnaujinami
+  };
+}
 
 export default HomePage;
