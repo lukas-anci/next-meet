@@ -29,29 +29,29 @@ const HomePage = (props) => {
 
 // SSR server side rendering - duomenys sugeneruojami uzklausos metu, tinka labiau kai duomenys kitna kas sekunde ar greiciau
 
-export function getServerSideProps(context) {
-  // sitas kodas niekada neatsiudrs pas klienta, cia galima sakyt yra back endas
-  const req = context.req;
-  const res = context.res;
-
-  return {
-    props: {
-      meetups: DUMMY_MEETUPS,
-    },
-  };
-}
-
-// SSG static site generating - duomenys sugeneruojami aplikacijos sukurimo metu ir atnaujinami jei reikia tam tikru intervalu
-
-// export function getStaticProps() {
+// export function getServerSideProps(context) {
 //   // sitas kodas niekada neatsiudrs pas klienta, cia galima sakyt yra back endas
-//   // fetch, validacija, ir pan
+//   const req = context.req;
+//   const res = context.res;
+
 //   return {
 //     props: {
 //       meetups: DUMMY_MEETUPS,
 //     },
-//     revalidate: 10, // kas 10 sek duomenys bus atnaujinami
 //   };
 // }
+
+// SSG static site generating - duomenys sugeneruojami aplikacijos sukurimo metu ir atnaujinami jei reikia tam tikru intervalu
+
+export function getStaticProps() {
+  // sitas kodas niekada neatsiudrs pas klienta, cia galima sakyt yra back endas
+  // fetch, validacija, ir pan
+  return {
+    props: {
+      meetups: DUMMY_MEETUPS,
+    },
+    revalidate: 10, // kas 10 sek duomenys bus atnaujinami
+  };
+}
 
 export default HomePage;
