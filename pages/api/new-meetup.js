@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { getCollection } from '../../utils/mongo-data';
 
 // localhost:3000/api/new-meetup
 // cia aprasyti galima prisijungimo slaptazodzius ir kita susijusia info
@@ -12,12 +12,8 @@ async function handler(req, res) {
     console.log('got data in api/new-meetup', data);
     let client;
     try {
-      client = await MongoClient.connect(process.env.MONGO_CONN);
-      const db = client.db();
+      const [meetupCollection, client] = await getCollection();
 
-      // sukurti arba nusitaikyti i esama
-
-      const meetupCollection = db.collection('meetups');
       const insertResult = await meetupCollection.insertOne(data);
       res.status(201).json({ msg: 'success', insertResult });
     } catch (error) {
