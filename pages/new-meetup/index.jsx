@@ -7,7 +7,8 @@ const NewMeetup = () => {
     console.log(enteredMeetupData);
     const result = await axios.post('/api/new-meetup', enteredMeetupData);
     console.log('result', result.data);
-    router.push('/');
+
+    result.data && router.push('/');
   }
   return (
     <>

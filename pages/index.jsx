@@ -1,4 +1,7 @@
 import MeetupList from './../components/meetups/MeetupList';
+// jei mes importuojam kazka kas bus naudojama tik getServerSideProps arba kitose back fnkcijose
+// jie nebuna prideti prie galutinio react componento
+import { MongoClient } from 'mongodb';
 
 const DUMMY_MEETUPS = [
   {
@@ -43,14 +46,34 @@ const HomePage = (props) => {
 
 // SSG static site generating - duomenys sugeneruojami aplikacijos sukurimo metu ir atnaujinami jei reikia tam tikru intervalu
 
-export function getStaticProps() {
+export async function getStaticProps() {
   // sitas kodas niekada neatsiudrs pas klienta, cia galima sakyt yra back endas
   // fetch, validacija, ir pan
+  const client = await MongoClient.connect(process.env.MONGO_CONN);
+  const db = client.db();
+
+  // sukurti arba nusitaikyti i esama
+
+  const meetupCollection = db.collection('meetups');
+
+  const allMeets = await meetupCollection.find({}).toArray();
+  client.close();
+  // console.log('all meets', allMeets);
+  const meetsInRequiredFormat = allMeets.map((dbObj) => {
+    // _id yra ObjectId tipo ir gausim klaida jei bandysim nuskaityti ji kaip stringa musu jSX
+    return {
+      id: dbObj._id.toString(),
+      title: dbObj.title,
+      address: dbObj.address,
+      image: dbObj.image,
+      description: dbObj.description,
+    };
+  });
   return {
     props: {
-      meetups: DUMMY_MEETUPS,
+      meetups: meetsInRequiredFormat,
     },
-    revalidate: 10, // kas 10 sek duomenys bus atnaujinami
+    revalidate: 2, // kas 10 sek duomenys bus atnaujinami
   };
 }
 
